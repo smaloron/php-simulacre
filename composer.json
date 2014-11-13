@@ -1,0 +1,13 @@
+{
+    "name": "smaloron/simulacre",
+    "description": "A php library to generate fake data for database testing",
+    "license": "GPL",
+    "authors": [
+        {
+            "name": "Sebastien Maloron",
+            "email": "contact@smaloron.eu",
+            "homepage": "http://smaloron.eu",
+            "role": "Developer"
+        }
+    ]
+}
