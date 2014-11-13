@@ -62,6 +62,11 @@ All fields share those keys, there are also some specific keys that depends on t
 - **includedInOutput** : default true : A boolean defining whether the field should be included in the output. Some random data are just used to support other generators and therefore should not appears in the output.  
 - **formatters** : An array of formatters that will be applied to the generated value, this will be discussed later.
 
+####Constant generator
+generator key : constant
+
+- **constantValue** : required : The constant value that will be returned by this generator.
+
 ####Integer generator
 generator key : integer
 
@@ -70,13 +75,13 @@ generator key : integer
 - **targetMean**    : The target mean of the whole population of generated values.
 - **numberOfRoll**  : default 1 : The number of rolls used to generate the value. A greater number of rolls will generate a gaussian distribution.
       
-###Real generator
+####Real generator
 generator key : real
 This generator inherits from the integer generator so all the integer keys can be used.
 
 - **numberOfDecimals** : default 2 : the number of decimals of the generated real value.
 
-###Date generator
+####Date generator
 generator key : date
 
 - **dateFormat**    : default Y-m-d : The format of the startDate and endDate parameters.
@@ -86,7 +91,7 @@ generator key : date
 
 the format to be used for the date can be found here http://php.net/manual/en/datetime.createfromformat.php
 
-###Weighted range generator
+####Weighted range generator
 generator key : weighted
 This generator output values according to a weighted range associative array.
   
@@ -103,7 +108,7 @@ This generator pick a random line from a delimited text file and returns the val
 - **firstDataLineNumber**   : default 0 : The first line that contains data. If the text file has a one line header, this parameter should be set to 1.
 - **returnedColumnNumber**  : default 0 : The column number that will be used to get the value, by default this is set to 0 so the first column of the file.
 
-###From database generator
+####From database generator
 generator key : databaseQuery
 
 This generator will execute an sql query and returns a random line from this query.
@@ -114,7 +119,7 @@ This generator will execute an sql query and returns a random line from this que
 - **queryParameters**           : An associative array representing the PDO parameters to use for executing the query. Those parameters can be constants or links to other generator values (this could be a case where a field should net be included in the ouput since its value would only serve as a random parameter to a query generator).
 - **newQueryForEachIteration**  : default false : By default the query is executed only once and its results stored for all the iteration. If you want to reexecute the query at each iteration, this parameter should be set to true. Notice that if you define a query parameter that links to another generator, the newQueryForEachIteration will be automatically set to true since the query parameters will change at each iteration.
 
-###Foreign key generator
+####Foreign key generator
 generator key : foreignKey
 
 This generator inherits from the databaseQuery generator so all the databaseQuery keys are allowed.
@@ -125,15 +130,74 @@ The foreignKey generator is a kind of specialized database query generator. It p
 
 Important note, since this generator will generate un random number of records for each foreign key, the numberOfRecords parameter of the table no longer apply. The generation job will stop when the last record of the foreign key query has been processed.
 
-###look up generator
+####look up generator
 generator key : lookUp
 
 This generator look up a value from another field's generator.
 
 - **lookUpFieldName**   : required : The name of the field that contains the look up value.
 - **lookUpKey**         : the key either numeric or alphabetic used to retrieve a value when the field returns an array.
+
+example
+
+```php
+    //This generator lookup the field first_name and get the value of the column sex 
+    //this assume that first_name comes from a database or text file generator and that a column named sex exists in the dataset
+    'sex'          => [
+                'generator'       => 'lookUp',
+                'lookUpFieldName' => 'first_name',
+                'lookUpKey'       => 'sex'
+            ]
+```
  
-##Formatters
+###Formatters
 Formatters are anonymous functions used to change the generated value of a field.
 
-##Stopping rules
+example
+
+```php
+    // This formatter convert the generated value to upper case
+    'person_name'          => [
+                'generator'     => 'name',
+                'formatters'    => [
+                    function ($value){
+                        return strtoupper($value);
+                    }
+                ]
+    ]
+```
+
+```php
+    //This generator lookup the field first_name and get the value of the column sex 
+    //this assume that first_name comes from a database or text file generator and that a column named sex exists in the dataset
+    //Since the sex column can have three values (female, male or both), we define a formatter to choose between male or female when we get a both value
+    'sex'          => [
+                'generator'       => 'lookUp',
+                'lookUpFieldName' => 'first_name',
+                'lookUpKey'       => 'sex',
+                'formatters'    => [
+                                    function ($value){
+                                        if($value == 'male' || $value == 'female'){
+                                            return $value[0];
+                                        } else {
+                                            if(mt_rand(1,100) < 50){
+                                                return 'm';
+                                            }else {
+                                                return 'f';
+                                            }
+                                        }
+                                    }
+                                ]
+            ]
+```
+
+
+###Stopping rules
+Stopping rules are anonymous functions that returns boolean values.
+ 
+ ```php
+ 'stoppingRule' => function(\Simulacre\SimulacreTable $table){
+             $field =  $table->getFieldByName('age');
+                 return $field->getTotal() > 500;
+         }
+ ```
