@@ -1,7 +1,0 @@
-eu
-fr
-uk
-com
-ie
-it
-jp
