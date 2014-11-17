@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by JetBrains PhpStorm.
- * User: SEB
- * Date: 13/09/13
- * Time: 14:21
- * To change this template use File | Settings | File Templates.
- */
 
 function simulacre_autoload($className)
 {

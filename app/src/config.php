@@ -1,6 +1,7 @@
 <?php
 
     $generatorClassMap = [
+        'constant'      => ['className' => '\Simulacre\Generators\ConstantGenerator'],
         'integer'       => ['className' => '\Simulacre\Generators\IntegerGenerator'],
         'real'          => ['className' => '\Simulacre\Generators\RealGenerator',],
         'weighted'      => ['className' => '\Simulacre\Generators\WeightedRangeGenerator',],
@@ -25,32 +26,34 @@
 
     $dataSources = [
         'default' => new \PDO(
-                            'sqlite:' . dirname(__FILE__) . '/data/simulacre.sqlite',
-                            null,
-                            null,
-                            array(\PDO::ERRMODE_EXCEPTION => true)
-         )
+            'sqlite:' . dirname(__FILE__) . '/data/simulacre.sqlite',
+            null,
+            null,
+            array(\PDO::ERRMODE_EXCEPTION => true)
+        )
     ];
 
     $outputClassmap = [
-        'csv'   => ['className' => '\Simulacre\Output\CsvOutput'],
+        'csv'      => ['className' => '\Simulacre\Output\CsvFileOutput'],
+        'sql'      => ['className' => '\Simulacre\Output\SqlFileOutput'],
+        'database' => ['className' => '\Simulacre\Output\DatabaseInsertOutput']
 
     ];
 
     $classMap = [
-        'generatorFactory'  => '\Simulacre\GeneratorFactory'
+        'generatorFactory' => '\Simulacre\GeneratorFactory'
     ];
 
     $config = [
-        'basePath'          => dirname(__FILE__),
-        'outputPath'        => dirname(__FILE__) . '/../outputFiles',
-        'defaultDataPath'   => dirname(__FILE__) . '/data/',
-        'classMaps'         => [
+        'basePath'        => dirname(__FILE__),
+        'outputPath'      => dirname(dirname(__FILE__)) . '/outputFiles',
+        'defaultDataPath' => dirname(__FILE__) . '/data/',
+        'classMaps'       => [
             'generators' => $generatorClassMap,
             'outputs'    => $outputClassmap,
-            'generics'  => $classMap,
+            'generics'   => $classMap,
         ],
-        'dataSources'       => $dataSources,
+        'dataSources'     => $dataSources,
 
     ];
 

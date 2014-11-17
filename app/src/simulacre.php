@@ -1,4 +1,8 @@
 <?php
+    /**
+     * This file is the bootstrap for the Simulacre application.
+     * It checks that all the parameters are correctly passed, instanciate the
+     */
     include_once 'simulacre-autoload.php';
 
     use Simulacre\Simulacre;
@@ -9,7 +13,8 @@
     }
 
     $path          = realpath('../projects/');
-    $projectConfig = $path . '/' . $argv[1]. '.php';
+    $projectConfig = $path . '/' . $argv[1] . '.php';
+
     if (!file_exists($projectConfig)) {
         fwrite(STDERR, "The file " . $projectConfig . " does not exists\n");
         exit(0);
@@ -19,12 +24,16 @@
     try {
         $startTime = time();
         $simulacre = new Simulacre($config);
-        fwrite(STDOUT, "Starting running the project\n");
+        fwrite(STDOUT, "Project started\n");
+
         $simulacre->runProject();
+
         $elapsedTime = time() - $startTime;
-        fwrite(STDOUT, "Project finished in ".$elapsedTime." seconds\n");
-    } catch (Exception $e){
-        fwrite(STDOUT, "Some errors occurred");
+        fwrite(STDOUT, "Project finished in " . $elapsedTime . " seconds\n");
+    } catch (Exception $e) {
+        //fwrite(STDOUT, "Some errors occurred");
+        //TODO log errors
+        fwrite(STDERR,$e->getMessage());
     }
 
 

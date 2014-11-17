@@ -1,14 +1,18 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: seb
- * Date: 05/11/2014
- * Time: 17:30
- */
+    namespace Simulacre\Generators;
 
-namespace Simulacre\Generators;
+    /**
+     * Generate a constant value
+     *
+     * Class ConstantGenerator
+     * @package Simulacre\Generators
+     */
+    class ConstantGenerator extends BaseGenerator
+    {
 
+        protected $_constantValue;
 
-class ConstantGenerator {
-
-} 
+        public function calculateValue() {
+            return $this->_constantValue;
+        }
+    }
