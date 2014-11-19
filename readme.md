@@ -142,7 +142,8 @@ example
 
 ```php
     //This generator lookup the field first_name and get the value of the column sex 
-    //this assume that first_name comes from a database or text file generator and that a column named sex exists in the dataset
+    //this assume that first_name comes from a database or text file generator 
+    //and that a column named sex exists in the dataset
     'sex'          => [
                 'generator'       => 'lookUp',
                 'lookUpFieldName' => 'first_name',
@@ -169,8 +170,10 @@ example
 
 ```php
     //This generator lookup the field first_name and get the value of the column sex 
-    //this assume that first_name comes from a database or text file generator and that a column named sex exists in the dataset
-    //Since the sex column can have three values (female, male or both), we define a formatter to choose between male or female when we get a both value
+    //this assume that first_name comes from a database or text file generator 
+    //and that a column named sex exists in the dataset
+    //Since the sex column can have three values (female, male or both), 
+    //we define a formatter to choose between male or female when we get a both value
     'sex'          => [
                 'generator'       => 'lookUp',
                 'lookUpFieldName' => 'first_name',
@@ -196,8 +199,10 @@ example
 Stopping rules are anonymous functions that returns boolean values.
  
  ```php
- 'stoppingRule' => function(\Simulacre\SimulacreTable $table){
-             $field =  $table->getFieldByName('age');
-                 return $field->getTotal() > 500;
-         }
+    //this rule stops the process when the total of the random ages reaches 500
+    
+     'stoppingRule' => function(\Simulacre\SimulacreTable $table){
+                 $field =  $table->getFieldByName('age');
+                     return $field->getTotal() >= 500;
+             }
  ```
